@@ -1,0 +1,16 @@
+{
+    "name": "HathoraCommon",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b9f6bed10ade428aa22e4df5f5d90e57"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

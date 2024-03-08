@@ -1,0 +1,13 @@
+# CurrentAllocation
+
+Metadata on an allocated instance of a room.
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           | Example                                                                               |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `ProcessId`                                                                           | *string*                                                                              | :heavy_check_mark:                                                                    | System generated unique identifier to a runtime instance of your game server.         | cbfcddd2-0006-43ae-996c-995fff7bed2e                                                  |
+| `RoomAllocationId`                                                                    | *string*                                                                              | :heavy_check_mark:                                                                    | System generated unique identifier to an allocated instance of a room.                | e3a0aa32-1711-4036-acfa-008b96061a78                                                  |
+| `ScheduledAt`                                                                         | [DateTime](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-5.0) | :heavy_check_mark:                                                                    | N/A                                                                                   |                                                                                       |
+| `UnscheduledAt`                                                                       | [DateTime](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-5.0) | :heavy_check_mark:                                                                    | N/A                                                                                   |                                                                                       |

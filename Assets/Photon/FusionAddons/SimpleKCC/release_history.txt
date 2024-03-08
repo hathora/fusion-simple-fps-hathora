@@ -1,0 +1,21 @@
+Photon Fusion Simple KCC Addon - Release History
+
+Last tested with Fusion SDK 2.0.0-RC-801
+
+Version 2.0.4
+- Changed root namespace from Fusion.SimpleKCC to Fusion.Addons.SimpleKCC.
+
+Version 2.0.3
+- Performance and network traffic optimizations.
+- Fixed interpolation in Shared Mode.
+- Added support for position and rotation handles.
+- Compatibility with latest Fusion SDK.
+
+Version 2.0.2
+- Performance optimizations.
+
+Version 2.0.1
+- Exposed KCC Settings.
+
+Version 2.0.0
+- Initial release.

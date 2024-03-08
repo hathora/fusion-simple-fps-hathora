@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 022a2291b89c82040a8bd048c0fdd537, type: 3}
+  m_Name: HathoraServerConfig
+  m_EditorClassIdentifier: 
+  _hathoraCoreOpts:
+    _appId: 
+    _existingAppsSelectedIndex: -1
+    _existingAppsWithDeploymentSerializableSerializable: []
+    _devAuthOpts:
+      _hathoraDevToken: 
+      _forceNewToken: 0
+  _linuxHathoraAutoBuildOpts:
+    _serverBuildDirName: Build-Server
+    _serverBuildExeName: Hathora-Unity_LinuxServer.x86_64
+    _isDevBuild: 1
+    _cleanBuildDir: 1
+    _overwriteDockerfile: 1
+    _scriptingBackendIndex: 1
+    _lastBuildLogsStr: 
+  _hathoraDeployOpts:
+    _roomsPerProcess: 1
+    _planNameIndexIndex: 0
+    _containerPortSerializableSerializable:
+      _transportType: 1
+      port: 7777
+    _transportTypeIndex: 1
+  _hathoraLobbyRoomOpts:
+    _hathoraRegionIndex: 5

@@ -1,0 +1,12 @@
+# ContainerPort
+
+A container port object represents the transport configruations for how your server will listen.
+
+
+## Fields
+
+| Field                                                                               | Type                                                                                | Required                                                                            | Description                                                                         | Example                                                                             |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `Name`                                                                              | *string*                                                                            | :heavy_check_mark:                                                                  | Readable name for the port.                                                         | default                                                                             |
+| `Port`                                                                              | *int*                                                                               | :heavy_check_mark:                                                                  | N/A                                                                                 | 8000                                                                                |
+| `TransportType`                                                                     | [TransportType](../../models/shared/TransportType.md)                               | :heavy_check_mark:                                                                  | Transport type specifies the underlying communication protocol to the exposed port. |                                                                                     |

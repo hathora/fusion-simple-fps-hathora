@@ -1,0 +1,241 @@
+fileFormatVersion: 2
+guid: a33fd7102d8871742b4bdaf546391179
+timeCreated: 1553425616
+licenseType: Store
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Arm_mesh001
+    100002: Bn_Shogun_Base_mesh
+    100004: Bn_Shogun_Fore-End_mesh
+    100006: Bn_Shogun_Gate_mesh001
+    100008: Bn_Shogun_Patron_mesh
+    100010: Bn_Shogun_Patron_mesh001
+    100012: Bn_Shogun_Staple_mesh
+    100014: Bn_Shogun_Triger_mesh
+    100016: Camera001
+    100018: Character001
+    100020: Character001Hub001
+    100022: Character001LArm1
+    100024: Character001LArm21
+    100026: Character001LArm22
+    100028: Character001LArmCollarbone
+    100030: Character001LArmDigit11
+    100032: Character001LArmDigit12
+    100034: Character001LArmDigit13
+    100036: Character001LArmDigit21
+    100038: Character001LArmDigit22
+    100040: Character001LArmDigit23
+    100042: Character001LArmDigit31
+    100044: Character001LArmDigit32
+    100046: Character001LArmDigit33
+    100048: Character001LArmDigit41
+    100050: Character001LArmDigit42
+    100052: Character001LArmDigit43
+    100054: Character001LArmDigit51
+    100056: Character001LArmDigit52
+    100058: Character001LArmDigit53
+    100060: Character001LArmIKTarget
+    100062: Character001LArmPalm
+    100064: Character001RArm1
+    100066: Character001RArm21
+    100068: Character001RArm22
+    100070: Character001RArmCollarbone
+    100072: Character001RArmDigit11
+    100074: Character001RArmDigit12
+    100076: Character001RArmDigit13
+    100078: Character001RArmDigit21
+    100080: Character001RArmDigit22
+    100082: Character001RArmDigit23
+    100084: Character001RArmDigit31
+    100086: Character001RArmDigit32
+    100088: Character001RArmDigit33
+    100090: Character001RArmDigit41
+    100092: Character001RArmDigit42
+    100094: Character001RArmDigit43
+    100096: Character001RArmDigit51
+    100098: Character001RArmDigit52
+    100100: Character001RArmDigit53
+    100102: Character001RArmIKTarget
+    100104: Character001RArmPalm
+    100106: Glove_mesh
+    100108: Group001
+    100110: Group_arms
+    100112: //RootNode
+    100114: Hp_Shogun_Base_mesh
+    100116: Rectangle001
+    100118: Shogun_Base_mesh
+    100120: Shogun_Fore-End_mesh
+    100122: Shogun_Gate_mesh
+    100124: Shogun_Patron_mesh
+    100126: Shogun_Patron_mesh001
+    100128: Shogun_Staple_mesh
+    100130: Shogun_Triger_mesh
+    400000: Arm_mesh001
+    400002: Bn_Shogun_Base_mesh
+    400004: Bn_Shogun_Fore-End_mesh
+    400006: Bn_Shogun_Gate_mesh001
+    400008: Bn_Shogun_Patron_mesh
+    400010: Bn_Shogun_Patron_mesh001
+    400012: Bn_Shogun_Staple_mesh
+    400014: Bn_Shogun_Triger_mesh
+    400016: Camera001
+    400018: Character001
+    400020: Character001Hub001
+    400022: Character001LArm1
+    400024: Character001LArm21
+    400026: Character001LArm22
+    400028: Character001LArmCollarbone
+    400030: Character001LArmDigit11
+    400032: Character001LArmDigit12
+    400034: Character001LArmDigit13
+    400036: Character001LArmDigit21
+    400038: Character001LArmDigit22
+    400040: Character001LArmDigit23
+    400042: Character001LArmDigit31
+    400044: Character001LArmDigit32
+    400046: Character001LArmDigit33
+    400048: Character001LArmDigit41
+    400050: Character001LArmDigit42
+    400052: Character001LArmDigit43
+    400054: Character001LArmDigit51
+    400056: Character001LArmDigit52
+    400058: Character001LArmDigit53
+    400060: Character001LArmIKTarget
+    400062: Character001LArmPalm
+    400064: Character001RArm1
+    400066: Character001RArm21
+    400068: Character001RArm22
+    400070: Character001RArmCollarbone
+    400072: Character001RArmDigit11
+    400074: Character001RArmDigit12
+    400076: Character001RArmDigit13
+    400078: Character001RArmDigit21
+    400080: Character001RArmDigit22
+    400082: Character001RArmDigit23
+    400084: Character001RArmDigit31
+    400086: Character001RArmDigit32
+    400088: Character001RArmDigit33
+    400090: Character001RArmDigit41
+    400092: Character001RArmDigit42
+    400094: Character001RArmDigit43
+    400096: Character001RArmDigit51
+    400098: Character001RArmDigit52
+    400100: Character001RArmDigit53
+    400102: Character001RArmIKTarget
+    400104: Character001RArmPalm
+    400106: Glove_mesh
+    400108: Group001
+    400110: Group_arms
+    400112: //RootNode
+    400114: Hp_Shogun_Base_mesh
+    400116: Rectangle001
+    400118: Shogun_Base_mesh
+    400120: Shogun_Fore-End_mesh
+    400122: Shogun_Gate_mesh
+    400124: Shogun_Patron_mesh
+    400126: Shogun_Patron_mesh001
+    400128: Shogun_Staple_mesh
+    400130: Shogun_Triger_mesh
+    2100000: 09 - Default
+    2100002: 02 - Default
+    4300000: Arm_mesh001
+    4300002: Glove_mesh
+    4300004: Shogun_Patron_mesh
+    4300006: Shogun_Base_mesh
+    4300008: Shogun_Triger_mesh
+    4300010: Shogun_Gate_mesh
+    4300012: Shogun_Staple_mesh
+    4300014: Shogun_Fore-End_mesh
+    4300016: Shogun_Patron_mesh001
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Arm_mesh001
+    13700002: Glove_mesh
+    13700004: Shogun_Base_mesh
+    13700006: Shogun_Fore-End_mesh
+    13700008: Shogun_Gate_mesh
+    13700010: Shogun_Patron_mesh
+    13700012: Shogun_Patron_mesh001
+    13700014: Shogun_Staple_mesh
+    13700016: Shogun_Triger_mesh
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

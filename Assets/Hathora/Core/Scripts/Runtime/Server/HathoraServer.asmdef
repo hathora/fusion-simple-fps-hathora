@@ -1,0 +1,19 @@
+{
+    "name": "HathoraServer",
+    "rootNamespace": "",
+    "references": [
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0e3fc80fc04a96743bef4dc13d47ec4e",
+        "GUID:abe524b27edd3ee43a52e7085bf4f4be",
+        "GUID:b9f6bed10ade428aa22e4df5f5d90e57"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

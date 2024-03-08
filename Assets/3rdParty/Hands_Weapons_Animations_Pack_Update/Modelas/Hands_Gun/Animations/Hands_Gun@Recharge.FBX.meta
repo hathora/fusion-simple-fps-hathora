@@ -1,0 +1,235 @@
+fileFormatVersion: 2
+guid: e20690ac7b30a9146a4fdd7799a125d8
+timeCreated: 1553425659
+licenseType: Store
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Arm_mesh001
+    100002: Base_mesh
+    100004: Bn_Base
+    100006: Bn_Bushing
+    100008: Bn_Gate
+    100010: Bn_Magazine
+    100012: Bn_Peen
+    100014: Bn_Trigger
+    100016: Bushing_mesh
+    100018: Camera001
+    100020: Character001
+    100022: Character001Hub001
+    100024: Character001LArm1
+    100026: Character001LArm21
+    100028: Character001LArm22
+    100030: Character001LArmCollarbone
+    100032: Character001LArmDigit11
+    100034: Character001LArmDigit12
+    100036: Character001LArmDigit13
+    100038: Character001LArmDigit21
+    100040: Character001LArmDigit22
+    100042: Character001LArmDigit23
+    100044: Character001LArmDigit31
+    100046: Character001LArmDigit32
+    100048: Character001LArmDigit33
+    100050: Character001LArmDigit41
+    100052: Character001LArmDigit42
+    100054: Character001LArmDigit43
+    100056: Character001LArmDigit51
+    100058: Character001LArmDigit52
+    100060: Character001LArmDigit53
+    100062: Character001LArmIKTarget
+    100064: Character001LArmPalm
+    100066: Character001RArm1
+    100068: Character001RArm21
+    100070: Character001RArm22
+    100072: Character001RArmCollarbone
+    100074: Character001RArmDigit11
+    100076: Character001RArmDigit12
+    100078: Character001RArmDigit13
+    100080: Character001RArmDigit21
+    100082: Character001RArmDigit22
+    100084: Character001RArmDigit23
+    100086: Character001RArmDigit31
+    100088: Character001RArmDigit32
+    100090: Character001RArmDigit33
+    100092: Character001RArmDigit41
+    100094: Character001RArmDigit42
+    100096: Character001RArmDigit43
+    100098: Character001RArmDigit51
+    100100: Character001RArmDigit52
+    100102: Character001RArmDigit53
+    100104: Character001RArmIKTarget
+    100106: Character001RArmPalm
+    100108: Gate_mesh
+    100110: Glove_mesh
+    100112: Group_arms
+    100114: Gun
+    100116: //RootNode
+    100118: Hp_Base
+    100120: Magazine_mesh
+    100122: Peen_mesh
+    100124: Rectangle001
+    100126: Trigger_mesh
+    400000: Arm_mesh001
+    400002: Base_mesh
+    400004: Bn_Base
+    400006: Bn_Bushing
+    400008: Bn_Gate
+    400010: Bn_Magazine
+    400012: Bn_Peen
+    400014: Bn_Trigger
+    400016: Bushing_mesh
+    400018: Camera001
+    400020: Character001
+    400022: Character001Hub001
+    400024: Character001LArm1
+    400026: Character001LArm21
+    400028: Character001LArm22
+    400030: Character001LArmCollarbone
+    400032: Character001LArmDigit11
+    400034: Character001LArmDigit12
+    400036: Character001LArmDigit13
+    400038: Character001LArmDigit21
+    400040: Character001LArmDigit22
+    400042: Character001LArmDigit23
+    400044: Character001LArmDigit31
+    400046: Character001LArmDigit32
+    400048: Character001LArmDigit33
+    400050: Character001LArmDigit41
+    400052: Character001LArmDigit42
+    400054: Character001LArmDigit43
+    400056: Character001LArmDigit51
+    400058: Character001LArmDigit52
+    400060: Character001LArmDigit53
+    400062: Character001LArmIKTarget
+    400064: Character001LArmPalm
+    400066: Character001RArm1
+    400068: Character001RArm21
+    400070: Character001RArm22
+    400072: Character001RArmCollarbone
+    400074: Character001RArmDigit11
+    400076: Character001RArmDigit12
+    400078: Character001RArmDigit13
+    400080: Character001RArmDigit21
+    400082: Character001RArmDigit22
+    400084: Character001RArmDigit23
+    400086: Character001RArmDigit31
+    400088: Character001RArmDigit32
+    400090: Character001RArmDigit33
+    400092: Character001RArmDigit41
+    400094: Character001RArmDigit42
+    400096: Character001RArmDigit43
+    400098: Character001RArmDigit51
+    400100: Character001RArmDigit52
+    400102: Character001RArmDigit53
+    400104: Character001RArmIKTarget
+    400106: Character001RArmPalm
+    400108: Gate_mesh
+    400110: Glove_mesh
+    400112: Group_arms
+    400114: Gun
+    400116: //RootNode
+    400118: Hp_Base
+    400120: Magazine_mesh
+    400122: Peen_mesh
+    400124: Rectangle001
+    400126: Trigger_mesh
+    2100000: 09 - Default
+    2100002: 02 - Default
+    4300000: Arm_mesh001
+    4300002: Glove_mesh
+    4300004: Magazine_mesh
+    4300006: Bushing_mesh
+    4300008: Gate_mesh
+    4300010: Base_mesh
+    4300012: Trigger_mesh
+    4300014: Peen_mesh
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Arm_mesh001
+    13700002: Base_mesh
+    13700004: Bushing_mesh
+    13700006: Gate_mesh
+    13700008: Glove_mesh
+    13700010: Magazine_mesh
+    13700012: Peen_mesh
+    13700014: Trigger_mesh
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

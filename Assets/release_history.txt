@@ -1,0 +1,37 @@
+Photon Fusion Simple FPS - Release History
+
+Version 2.0.5
+- Updated Fusion Menu - added support for connection plugins. This required re-linking references in Startup scene.
+- Updated Fusion SDK to 2.0.0-RC-801.
+
+Version 2.0.4
+- Updated Fusion SDK to 2.0.0-RC-797.
+
+Version 2.0.3
+- Fixed shooting animation while strafing.
+- Fixed exceptions while running dedicated server in batch mode.
+- Application frame rate set to server tick rate for dedicated server.
+- Added PlayerManager utility for spawning/despawning players.
+- Added more pickups and crates to Deathmatch scene.
+- Decreased cooldown of pickups.
+- Improved player jump.
+- Updated project to Unity 2022.3.12f1.
+- Updated Fusion SDK to 2.0.0-794.
+- Updated Simple KCC to 2.0.4.
+- Updated packages.
+
+Version 2.0.2
+- Fixed app version in Fusion Menu connector.
+- Updated Fusion SDK to 2.0.0-774.
+- Updated Simple KCC to 2.0.3.
+- Updated packages.
+
+Version 2.0.1
+- Improved Fusion Menu connector.
+- Updated project to Unity 2022.3.9f1.
+- Updated Fusion SDK to 2.0.0-756.
+- Updated Simple KCC to 2.0.2.
+- Updated packages.
+
+Version 2.0.0
+- Initial release.
