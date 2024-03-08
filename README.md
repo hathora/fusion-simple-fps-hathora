@@ -10,6 +10,8 @@ Before continuing, review these requirements:
 - You must create a Hathora account.
 - You must use Unity Editor 2022.3.
 
+Note: Photon Fusion SDK is a third-party dependency and is subject to [Exit Games' license terms](license.txt).
+
 # **Project setup**
 
 ## **Installing the Unity Editor**
