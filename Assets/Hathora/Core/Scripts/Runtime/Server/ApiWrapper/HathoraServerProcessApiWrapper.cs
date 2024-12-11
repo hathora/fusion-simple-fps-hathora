@@ -17,7 +17,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
     /// </summary>
     public class HathoraServerProcessApiWrapper : HathoraServerApiWrapperBase
     {
-        protected ProcessesV1 ProcessesApi { get; }
+        protected IProcessesV3 ProcessesApi { get; }
 
         public HathoraServerProcessApiWrapper(
             HathoraCloudSDK _hathoraSdk,
@@ -27,7 +27,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             Debug.Log($"[{nameof(HathoraServerProcessApiWrapper)}.Constructor] " +
                 "Initializing Server API...");
             
-            this.ProcessesApi = _hathoraSdk.ProcessesV1 as ProcessesV1;
+            this.ProcessesApi = _hathoraSdk.ProcessesV3;
         }
         
         
@@ -45,7 +45,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// </param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns Process on success</returns>
-        public async Task<Process> GetProcessInfoAsync(
+        public async Task<ProcessV3> GetProcessInfoAsync(
             string _processId,
             bool _returnNullOnStoppedProcess = true,
             int _pollIntervalSecs = 1, 
@@ -56,13 +56,13 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             Debug.Log($"{logPrefix} <color=yellow>processId: {_processId}</color>");
             
             // Process request
-            GetProcessInfoRequest getProcessInfoRequest = new()
+            GetProcessRequest getProcessInfoRequest = new()
             {
                 ProcessId = _processId,
             };
             
             // Get response async =>
-            GetProcessInfoResponse getProcessInfoResponse = null;
+            GetProcessResponse getProcessInfoResponse = null;
             
             // Poll until process has ExposePort available
             int pollSecondsTicked; // Duration to be logged later
@@ -73,15 +73,15 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
                 
                 try
                 {
-                    getProcessInfoResponse = await ProcessesApi.GetProcessInfoAsync(getProcessInfoRequest);
+                    getProcessInfoResponse = await ProcessesApi.GetProcessAsync(getProcessInfoRequest);
                 }
                 catch(Exception e)
                 {
-                    Debug.LogError($"{logPrefix} {nameof(ProcessesApi.GetProcessInfoAsync)} => Error: {e.Message}");
+                    Debug.LogError($"{logPrefix} {nameof(ProcessesApi.GetProcessAsync)} => Error: {e.Message}");
                     return null; // fail
                 }
 
-                if (getProcessInfoResponse.Process?.ExposedPort?.Port != null)
+                if (getProcessInfoResponse.ProcessV3?.ExposedPort?.Port != null)
                     break;
                 
                 await Task.Delay(TimeSpan.FromSeconds(_pollIntervalSecs), _cancelToken);
@@ -89,16 +89,16 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
 
             // -----------------------------------------
             // We're done polling -- success or timeout?
-            if (getProcessInfoResponse?.Process?.ExposedPort?.Port == null)
+            if (getProcessInfoResponse?.ProcessV3?.ExposedPort?.Port == null)
             {
-                Debug.LogError($"{logPrefix} {nameof(ProcessesApi.GetProcessInfoAsync)} => Error: Timed out");
+                Debug.LogError($"{logPrefix} {nameof(ProcessesApi.GetProcessAsync)} => Error: Timed out");
                 return null;
             }
 
             // Process result
-            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(getProcessInfoResponse.Process)}: {ToJson(getProcessInfoResponse.Process)}</color>");
+            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(getProcessInfoResponse.ProcessV3)}: {ToJson(getProcessInfoResponse.ProcessV3)}</color>");
 
-            Process process = getProcessInfoResponse.Process;
+            ProcessV3 process = getProcessInfoResponse.ProcessV3;
 
             getProcessInfoResponse.RawResponse?.Dispose(); // Prevent mem leaks
             return process;

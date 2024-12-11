@@ -10313,8 +10313,6 @@ GameObject:
   - component: {fileID: 383778131}
   - component: {fileID: 383778130}
   - component: {fileID: 383778129}
-  - component: {fileID: 383778133}
-  - component: {fileID: 383778132}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -10382,38 +10380,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &383778132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 383778128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 2208875843
-  ObjectInterest: 1
-  _DestroyWhenStateAuthorityLeaves: 0
-  _AllowStateAuthorityOverride: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 383778133}
---- !u!114 &383778133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 383778128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d150462bf92fcd548ba82d945c51ea21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &388445886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17544,8 +17510,6 @@ GameObject:
   - component: {fileID: 707478409}
   - component: {fileID: 707478408}
   - component: {fileID: 707478407}
-  - component: {fileID: 707478413}
-  - component: {fileID: 707478412}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -17708,38 +17672,6 @@ Transform:
   - {fileID: 2044013989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 15, y: 109.2, z: 0}
---- !u!114 &707478412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 707478406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1685117209
-  ObjectInterest: 1
-  _DestroyWhenStateAuthorityLeaves: 0
-  _AllowStateAuthorityOverride: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 707478413}
---- !u!114 &707478413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 707478406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d150462bf92fcd548ba82d945c51ea21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &707752441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43846,8 +43778,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunnerPrefab: {fileID: 3095207314023402545, guid: c12a75a40c6d20741bb5e98bcc32e9bc, type: 3}
-  StartMode: 0
-  AutoStartAs: 2
+  StartMode: 1
+  AutoStartAs: 6
   AutoHideGUI: 1
   AutoClients: 0
   ClientStartDelay: 0.1
@@ -52432,8 +52364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 2217754275
   ObjectInterest: 1
-  _DestroyWhenStateAuthorityLeaves: 0
-  _AllowStateAuthorityOverride: 1
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:

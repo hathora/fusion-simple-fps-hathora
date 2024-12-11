@@ -1,5 +1,16 @@
 Photon Fusion Simple FPS - Release History
 
+Version 2.0.7
+- Implemented smooth, tick-aligned look rotation accumulation.
+- Updated Fusion Simple KCC to 2.0.6.
+- Removed Physics addon (unused).
+
+Version 2.0.6
+- Simulation of proxy players is disabled by default.
+- Added error message for WebGL and mobile platforms (not supported).
+- Updated Fusion SDK to 2.0.0-RC3-807.
+- Updated Fusion Simple KCC to 2.0.5.
+
 Version 2.0.5
 - Updated Fusion Menu - added support for connection plugins. This required re-linking references in Startup scene.
 - Updated Fusion SDK to 2.0.0-RC-801.

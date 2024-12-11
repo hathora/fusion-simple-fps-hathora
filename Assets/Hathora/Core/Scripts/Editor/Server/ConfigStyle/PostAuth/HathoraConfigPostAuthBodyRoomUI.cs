@@ -426,7 +426,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             };
             
             HathoraServerRoomApiWrapper serverRoomApiWrapper = new(
-                new HathoraCloudSDK(security, ServerConfig.HathoraCoreOpts.AppId),
+                new HathoraCloudSDK(security, null, ServerConfig.HathoraCoreOpts.AppId),
                 ServerConfig);
 
             (Room room, ConnectionInfoV2 connInfo) roomConnInfoTuple;
@@ -508,7 +508,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             Assert.IsNotNull(_roomConnInfo.Room?.RoomId, "!RoomId");
             
             Assert.AreEqual(_roomConnInfo.ConnectionInfoV2?.Status,
-                ConnectionInfoV2Status.Active, 
+                RoomReadyStatus.Active, 
                 "Status !Active");
         }
         

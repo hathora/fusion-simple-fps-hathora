@@ -64,7 +64,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             string logPrefix = $"[{nameof(HathoraServerRoomApiWrapper)}.{nameof(ServerCreateRoomAwaitActiveAsync)}]";
             
             // (1/3) Create Room
-            ConnectionInfoV2 createdRoomConnectionInfo = null;
+            RoomConnectionData createdRoomConnectionInfo = null;
             
             try
             {
@@ -102,7 +102,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
                     newlyCreatedRoomId,
                     _cancelToken);
 
-                Assert.IsTrue(activeConnectionInfo?.Status == ConnectionInfoV2Status.Active,
+                Assert.IsTrue(activeConnectionInfo?.Status == RoomReadyStatus.Active,
                     $"{logPrefix} {nameof(activeConnectionInfo)} Expected `Active` status, since Room is Active");
             }
             catch (TaskCanceledException e)
@@ -156,7 +156,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// <param name="_customRoomId"></param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns></returns>
-        private async Task<ConnectionInfoV2> ServerCreateRoomAsync(
+        private async Task<RoomConnectionData> ServerCreateRoomAsync(
             CreateRoomParams _createRoomParams,
             string _customRoomId = null,
             CancellationToken _cancelToken = default)
@@ -195,12 +195,12 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             }
             
             // Process response
-            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(createRoomResponse.ConnectionInfoV2)}: " +
-                $"{ToJson(createRoomResponse.ConnectionInfoV2)}</color>");
+            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(createRoomResponse.RoomConnectionData)}: " +
+                $"{ToJson(createRoomResponse.RoomConnectionData)}</color>");
 
             // Everything else in this result object is currently irrelevant except the RoomId
             createRoomResponse.RawResponse?.Dispose(); // Prevent mem leaks
-            return createRoomResponse.ConnectionInfoV2;
+            return createRoomResponse.RoomConnectionData;
         }
         
         /// <summary>
@@ -324,7 +324,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             int attemptNum = 0;
             IsPollingForActiveConnInfo = true;
             
-            while (connectionInfo is not { Status: ConnectionInfoV2Status.Active })
+            while (connectionInfo is not { Status: RoomReadyStatus.Active })
             {
                 // Check for cancel + await 1s
                 if (_cancelToken.IsCancellationRequested)
@@ -345,7 +345,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
                     _cancelToken: _cancelToken);
                 
                 // ---------------
-                if (connectionInfo?.Status == ConnectionInfoV2Status.Active)
+                if (connectionInfo?.Status == RoomReadyStatus.Active)
                     break; // Success
                 
                 // ---------------

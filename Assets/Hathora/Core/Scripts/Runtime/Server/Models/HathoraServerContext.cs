@@ -24,7 +24,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         #region Vars
         public string EnvVarProcessId { get; private set; }
         public Region EnvVarRegion { get; private set; }
-        public Process ProcessInfo { get; set; }
+        public ProcessV3 ProcessInfo { get; set; }
         public LobbyV3 Lobby { get; set; }
         public List<RoomWithoutAllocations> ActiveRoomsForProcess { get; set; }
         #endregion // Vars
@@ -39,7 +39,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         /// <returns></returns>
         public (string host, ushort port) GetHathoraServerHostPort()
         {
-            ExposedPort connectInfo = ProcessInfo?.ExposedPort;
+            ProcessV3ExposedPort connectInfo = ProcessInfo?.ExposedPort;
 
             if (connectInfo == null)
                 return default;
@@ -58,7 +58,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
             
             (IPAddress ip, ushort port) ipPort;
             
-            ExposedPort connectInfo = ProcessInfo?.ExposedPort;
+            ProcessV3ExposedPort connectInfo = ProcessInfo?.ExposedPort;
 
             if (connectInfo == null)
             {
@@ -132,7 +132,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         public HathoraServerContext(
             string _envVarProcessId,
             Region _envVarRegion,
-            Process _processInfo,
+            ProcessV3 _processInfo,
             List<RoomWithoutAllocations> _activeRoomsForProcess,
             LobbyV3 _lobby)
         {

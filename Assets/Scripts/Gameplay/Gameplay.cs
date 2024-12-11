@@ -3,6 +3,10 @@ using System.Collections;
 using UnityEngine;
 using Fusion;
 
+#if !UNITY_EDITOR && (UNITY_WEBGL || UNITY_ANDROID || UNITY_IOS)
+#error This sample doesn't support currently selected platform, please switch to Windows, Mac, Linux in Build Settings.
+#endif
+
 namespace SimpleFPS
 {
 	/// <summary>
@@ -87,6 +91,11 @@ namespace SimpleFPS
 			if (Runner.Mode == SimulationModes.Server)
 			{
 				Application.targetFrameRate = TickRate.Resolve(Runner.Config.Simulation.TickRateSelection).Server;
+			}
+
+			if (Runner.GameMode == GameMode.Shared)
+			{
+				throw new System.NotSupportedException("This sample doesn't support Shared Mode, please start the game as Server, Host or Client.");
 			}
 		}
 

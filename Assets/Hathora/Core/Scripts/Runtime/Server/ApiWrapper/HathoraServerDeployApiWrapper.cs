@@ -13,6 +13,22 @@ using UnityEngine;
 
 namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
 {
+    public class ContainerSize
+    {
+        public double Cpu { get; set; }
+        public double Memory { get; set; }
+    }
+
+    public static class ContainerSizes
+    {
+        public static readonly Dictionary<PlanName, ContainerSize> Sizes = new Dictionary<PlanName, ContainerSize>
+        {
+            { PlanName.Tiny, new ContainerSize { Cpu = 0.5, Memory = 1024 } },
+            { PlanName.Small, new ContainerSize { Cpu = 1, Memory = 2048 } },
+            { PlanName.Medium, new ContainerSize { Cpu = 2, Memory = 4096 } },
+            { PlanName.Large, new ContainerSize { Cpu = 4, Memory = 8192 } }
+        };
+    }
     /// <summary>
     /// Operations that allow you configure and manage an application's build at runtime.
     /// Build Concept | https://hathora.dev/docs/concepts/hathora-entities#build
@@ -20,7 +36,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
     /// </summary>
     public class HathoraServerDeployApiWrapper : HathoraServerApiWrapperBase
     {
-        protected DeploymentV1 DeployApi { get; }
+        protected IDeploymentsV3 DeployApi { get; }
         private HathoraDeployOpts deployOpts => HathoraServerConfig.HathoraDeployOpts;
         private volatile bool uploading;
 
@@ -32,7 +48,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             Debug.Log($"[{nameof(HathoraServerDeployApiWrapper)}.Constructor] " +
                 "Initializing Server API...");
             
-            this.DeployApi = _hathoraSdk.DeploymentV1 as DeploymentV1;
+            this.DeployApi = _hathoraSdk.DeploymentsV3;
         }
         
         
@@ -51,9 +67,10 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// </param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns Deployment on success</returns>
-        public async Task<Deployment> CreateDeploymentAsync(
-            int _buildId,
-            List<Env> _env = null,
+        public async Task<DeploymentV3> CreateDeploymentAsync(
+            string _buildId,
+            Boolean _idleTimeoutEnabledSetting,
+            List<DeploymentV3Env> _env = null,
             List<ContainerPort> _additionalContainerPorts = null,
             CancellationToken _cancelToken = default)
         {
@@ -65,8 +82,8 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             #region DeploymentEnvConfigInner Workaround
             // #######################################################################################
             // (!) Hathora SDK's DeploymentEnv is identical to DeploymentConfigEnv >> Port it over
-            List<DeploymentConfigEnv> envWorkaround = _env?.Select(envVar => 
-                new DeploymentConfigEnv
+            List<DeploymentConfigV3Env> envWorkaround = _env?.Select(envVar => 
+                new DeploymentConfigV3Env
                 {
                     Name = envVar.Name, 
                     Value = envVar.Value,
@@ -74,11 +91,27 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             // #######################################################################################
             #endregion DeploymentEnvConfigInner Workaround
             
-            DeploymentConfig deployConfig = new()
+            // Map Plan Name to requested hardware
+            double requestedCPU = 1;
+            double requestedMemory = 2048;
+            if (ContainerSizes.Sizes.TryGetValue(deployOpts.PlanName, out ContainerSize size))
             {
-                Env = envWorkaround ?? new List<DeploymentConfigEnv>(),
+                requestedCPU = size.Cpu;
+                requestedMemory = size.Memory;
+            }
+            else
+            {
+                Console.WriteLine("Plan not found, defaulting to 1 CPU, 2048 MB plan size");
+            }
+            
+            DeploymentConfigV3 deployConfig = new()
+            {
+                BuildId = _buildId,
+                Env = envWorkaround ?? new List<DeploymentConfigV3Env>(),
                 RoomsPerProcess = deployOpts.RoomsPerProcess, 
-                PlanName = deployOpts.PlanName, 
+                RequestedCPU = requestedCPU,
+                RequestedMemoryMB = requestedMemory,
+                IdleTimeoutEnabled = _idleTimeoutEnabledSetting,
                 AdditionalContainerPorts = _additionalContainerPorts ?? new List<ContainerPort>(),
                 TransportType = selectedTransportType,
                 ContainerPort = deployOpts.ContainerPortSerializable.Port,
@@ -86,8 +119,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
 
             CreateDeploymentRequest createDeploymentRequest = new()
             {
-                DeploymentConfig = deployConfig,
-                BuildId = _buildId,
+                DeploymentConfigV3 = deployConfig,
             };
             
             Debug.Log($"{logPrefix} <color=yellow>Request {nameof(deployConfig)}: {ToJson(deployConfig)}</color>");
@@ -105,19 +137,19 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
                 return null; // fail
             }
 
-            Debug.Log($"{logPrefix} <color=yellow>{nameof(createDeploymentResponse.Deployment)}: " +
-                $"{ToJson(createDeploymentResponse.Deployment)}</color>");
+            Debug.Log($"{logPrefix} <color=yellow>{nameof(createDeploymentResponse.DeploymentV3)}: " +
+                $"{ToJson(createDeploymentResponse.DeploymentV3)}</color>");
             
             createDeploymentResponse.RawResponse?.Dispose(); // Prevent mem leaks
-            return createDeploymentResponse.Deployment;
+            return createDeploymentResponse.DeploymentV3;
         }
 
         /// <summary>
-        /// Wrapper for `CreateDeploymentAsync` to upload and deploy a cloud deploy to Hathora.
+        /// Wrapper for `CreateDeploymentDeprecatedAsync` to upload and deploy a cloud deploy to Hathora.
         /// </summary>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns Deployment on success</returns>
-        public async Task<List<Deployment>> GetDeploymentsAsync(
+        public async Task<List<DeploymentV3>> GetDeploymentsAsync(
             CancellationToken _cancelToken = default)
         {
             string logPrefix = $"[{nameof(HathoraServerDeployApiWrapper)}.{nameof(CreateDeploymentAsync)}]";
@@ -141,7 +173,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             }
 
             // Process response
-            List<Deployment> deployments = getDeploymentsResponse.Classes;
+            List<DeploymentV3> deployments = getDeploymentsResponse.DeploymentsV3Page != null ? getDeploymentsResponse.DeploymentsV3Page.Deployments : new List<DeploymentV3>();
             Debug.Log($"{logPrefix} <color=yellow>num {nameof(deployments)}: '{deployments?.Count}'</color>");
             
             getDeploymentsResponse.RawResponse?.Dispose(); // Prevent mem leaks

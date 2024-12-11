@@ -86,9 +86,6 @@ namespace SimpleFPS
 				return;
 			}
 
-			if (IsProxy)
-				return;
-
 			if (Health.IsAlive == false)
 			{
 				// We want dead body to finish movement - fall to ground etc.
@@ -177,14 +174,14 @@ namespace SimpleFPS
 			KCC.AddLookRotation(input.LookRotationDelta, -89f, 89f);
 
 			// It feels better when player falls quicker
-			KCC.SetGravity(KCC.RealVelocity.y >= 0f ? Vector3.down * UpGravity : Vector3.down * DownGravity);
+			KCC.SetGravity(KCC.RealVelocity.y >= 0f ? -UpGravity : -DownGravity);
 
 			var inputDirection = KCC.TransformRotation * new Vector3(input.MoveDirection.x, 0f, input.MoveDirection.y);
-			var jumpImpulse = Vector3.zero;
+			var jumpImpulse = 0f;
 
 			if (input.Buttons.WasPressed(_previousButtons, EInputButton.Jump) && KCC.IsGrounded)
 			{
-				jumpImpulse = Vector3.up * JumpForce;
+				jumpImpulse = JumpForce;
 			}
 
 			MovePlayer(inputDirection * MoveSpeed, jumpImpulse);
@@ -232,7 +229,7 @@ namespace SimpleFPS
 			_previousButtons = input.Buttons;
 		}
 
-		private void MovePlayer(Vector3 desiredMoveVelocity = default, Vector3 jumpImpulse = default)
+		private void MovePlayer(Vector3 desiredMoveVelocity = default, float jumpImpulse = default)
 		{
 			float acceleration = 1f;
 

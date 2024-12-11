@@ -5,5 +5,5 @@
 
 | Field                                    | Type                                     | Required                                 | Description                              | Example                                  |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
-| `BuildId`                                | *int*                                    | :heavy_check_mark:                       | N/A                                      | 1                                        |
-| `AppId`                                  | *string*                                 | :heavy_minus_sign:                       | N/A                                      | app-af469a92-5b45-4565-b3c4-b79878de67d2 |
+| `BuildId`                                | *string*                                 | :heavy_check_mark:                       | N/A                                      |                                          |
+| `OrgId`                                  | *string*                                 | :heavy_minus_sign:                       | N/A                                      | org-6f706e83-0ec1-437a-9a46-7d4281eb2f39 |

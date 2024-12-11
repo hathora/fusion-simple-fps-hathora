@@ -18,7 +18,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
         private HathoraCloudSDK HathoraSdk { get; set; }
 
         /// <summary>Common shortcut to HathoraSdk.Config.AppId</summary>
-        protected string AppId => HathoraSdk.Config.AppId;
+        protected string AppId => HathoraSdk.SDKConfiguration.AppId;
 
         /// <summary>Works around UnityWebRequest serialization errs for disposable objs</summary>
         private JsonSerializerSettings jsonSerializerSettings;

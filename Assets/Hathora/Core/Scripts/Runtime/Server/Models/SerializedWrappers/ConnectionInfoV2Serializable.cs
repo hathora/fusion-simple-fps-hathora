@@ -18,8 +18,8 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
     public class ConnectionInfoV2Serializable
     {
         [SerializeField, JsonProperty("_status")]
-        private ConnectionInfoV2Status _status;
-        public ConnectionInfoV2Status Status
+        private RoomReadyStatus _status;
+        public RoomReadyStatus Status
         {
             get => _status;
             set => _status = value;

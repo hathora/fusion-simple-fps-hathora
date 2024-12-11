@@ -17,7 +17,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
     /// </summary>
     public class HathoraRoomApiWrapper : HathoraApiWrapperBase
     {
-        protected RoomV2 RoomApi { get; }
+        protected IRoomsV2 RoomApi { get; }
 
         public HathoraRoomApiWrapper(HathoraCloudSDK _hathoraSdk)
         : base(_hathoraSdk)
@@ -25,7 +25,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
             Debug.Log($"[{nameof(HathoraRoomApiWrapper)}.Constructor] " +
                 "Initializing Common API...");
             
-            this.RoomApi = _hathoraSdk.RoomV2 as RoomV2;
+            this.RoomApi = _hathoraSdk.RoomsV2;
         }
 
         
@@ -71,7 +71,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
                     return null; // fail
                 }
 
-                if (getConnectionInfoResponse.ConnectionInfoV2?.Status == ConnectionInfoV2Status.Active)
+                if (getConnectionInfoResponse.ConnectionInfoV2?.Status == RoomReadyStatus.Active)
                     break;
                 
                 await Task.Delay(TimeSpan.FromSeconds(_pollIntervalSecs), _cancelToken);
@@ -81,7 +81,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
             // We're done polling -- sucess or timeout?
             ConnectionInfoV2 connectionInfo = getConnectionInfoResponse?.ConnectionInfoV2;
 
-            if (connectionInfo?.Status != ConnectionInfoV2Status.Active)
+            if (connectionInfo?.Status != RoomReadyStatus.Active)
             {
                 Debug.LogError($"{logPrefix} Error: Timed out");
                 return null;

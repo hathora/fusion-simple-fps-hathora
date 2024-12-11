@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 using HathoraCloud;
 using HathoraCloud.Models.Operations;
 using HathoraCloud.Models.Shared;
+using HathoraCloud.Utils;
 using UnityEngine;
+using UnityEngine.Networking;
+using File = System.IO.File;
 
 namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
 {
@@ -21,8 +24,9 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
     /// </summary>
     public class HathoraServerBuildApiWrapper : HathoraServerApiWrapperBase
     {
-        protected BuildV1 BuildApi { get; }
+        protected IBuildsV3 BuildApi { get; }
         private volatile bool uploading;
+        private volatile bool runningBuild;
 
         public HathoraServerBuildApiWrapper(
             HathoraCloudSDK _hathoraSdk,
@@ -32,7 +36,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             Debug.Log($"[{nameof(HathoraServerBuildApiWrapper)}.Constructor] " +
                 "Initializing Server API...");
             
-            this.BuildApi = _hathoraSdk.BuildV1 as BuildV1;
+            this.BuildApi = _hathoraSdk.BuildsV3;
         }
         
         
@@ -45,30 +49,31 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// </param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns Build on success >> Pass this info to RunCloudBuildAsync()</returns>
-        public async Task<Build> CreateBuildAsync(
+        public async Task<CreatedBuildV3WithMultipartUrls> CreateBuildAsync(
+            double _buildSizeBytes,
             string _buildTag = null,
             CancellationToken _cancelToken = default)
         {
             string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(CreateBuildAsync)}]";
             
             // Prep request
-            CreateBuildParams createBuildParmas = new()
+            CreateMultipartBuildParams createBuildParams = new()
             {
                 BuildTag = _buildTag,
+                BuildSizeInBytes = _buildSizeBytes,
             };
-            
+
             CreateBuildRequest createBuildRequestWrapper = new()
             {
-                AppId = base.AppId,
-                CreateBuildParams = createBuildParmas,
+                CreateMultipartBuildParams = createBuildParams,
             };
             
             // Get response async =>
-            CreateBuildResponse createCloudBuildResponse = null;
+            CreateBuildResponse createBuildResponse = null;
             
             try
             {
-                createCloudBuildResponse = await BuildApi.CreateBuildAsync(createBuildRequestWrapper);
+                createBuildResponse = await BuildApi.CreateBuildAsync(createBuildRequestWrapper);
             }
             catch (Exception e)
             {
@@ -76,11 +81,11 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
                 return null; // fail
             }
 
-            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(createCloudBuildResponse)}: " +
-                $"{ToJson(createCloudBuildResponse.Build)}</color>");
+            Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(createBuildResponse)}: " +
+                $"{ToJson(createBuildResponse.StatusCode)}</color>");
             
-            createCloudBuildResponse.RawResponse?.Dispose(); // Prevent mem leaks
-            return createCloudBuildResponse.Build;
+            createBuildResponse.RawResponse?.Dispose(); // Prevent mem leaks
+            return createBuildResponse.CreatedBuildV3WithMultipartUrls;
         }
 
         /// <summary>
@@ -89,54 +94,54 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// (!) After this is done, you probably want to call GetBuildInfoAsync().
         /// </summary>
         /// <param name="_buildId"></param>
+        /// <param name="_createBuildResponse">Response from CreateBuild request</param>
         /// <param name="_pathToTarGzBuildFile">Ensure path is normalized</param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns streamLogs (List of chunks) on success</returns>
-        public async Task<List<string>> RunCloudBuildAsync(
-            int _buildId, 
-            string _pathToTarGzBuildFile,
+        public async Task<List<string>> UploadAndRunCloudBuildAsync(
+            string _buildId, 
+            CreatedBuildV3WithMultipartUrls _createBuildResponse,
+            string filePath,
             CancellationToken _cancelToken = default)
         {
-            string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(RunCloudBuildAsync)}]";
-         
-            // Prep upload request
-            HathoraCloud.Models.Operations.File requestFile = new()
-            {
-                FileName = _pathToTarGzBuildFile,
-                // Content = // Apply below in try/catch since we need to await
-            };
+            string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(UploadAndRunCloudBuildAsync)}]";
             
-            RunBuildRequestBody runBuildRequest = new()
+            // Multipart upload requests
+            try
             {
-                File = requestFile,
-            };
+                Debug.Log("Starting multipart upload");
+                uploading = true;
+                _ = startUploadProgressNoticeAsync(); // !await
+                await UploadToMultipartUrl(
+                    _createBuildResponse.UploadParts,
+                    _createBuildResponse.MaxChunkSize,
+                    _createBuildResponse.CompleteUploadPostRequestUrl,
+                    filePath
+                );
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{logPrefix} {nameof(UploadToMultipartUrl)} => Error: {e.Message}");
+                return null; // fail
+            }
+            finally
+            {
+                uploading = false;
+            }
             
-            RunBuildRequest runBuildRequestWrapper = new()
+            RunBuildRequest runBuildRequest = new()
             {
-                BuildId = _buildId,
-                RequestBody = runBuildRequest,
+                BuildId = _buildId
             };
                 
             // Get response async =>
             RunBuildResponse runBuildResponse = null;
-            // MemoryQueueBufferStream stream = null; // `RunBuild200TextPlainBinaryString` replaced with `RunBuild200TextPlainByteString`
-            uploading = true;
+            runningBuild = true;
 
             try
             {
-                _ = startProgressNoticeAsync(); // !await
-                
-                // Prepare disposable file _stream
-                await using FileStream fileStream = new(
-                    _pathToTarGzBuildFile,
-                    FileMode.Open,
-                    FileAccess.Read);
-
-                runBuildRequestWrapper.RequestBody.File.Content = toByteArray(fileStream);
-                runBuildResponse = await BuildApi.RunBuildAsync(runBuildRequestWrapper);
-
-                // stream = runBuildResponse.RunBuild200TextPlainByteString; // `RunBuild200TextPlainBinaryString` replaced with `RunBuild200TextPlainByteString`
-                uploading = true;
+                _ = startRunBuildProgressNoticeAsync(); // !await
+                runBuildResponse = await BuildApi.RunBuildAsync(runBuildRequest);
             }
             catch (TaskCanceledException)
             {
@@ -149,19 +154,18 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             }
             finally
             {
-                uploading = false;
+                runningBuild = false;
             }
 
             Debug.Log($"{logPrefix} Done - to know if success, call BuildApi.RunBuild " +
                 "(or see `HathoraServerConfig` logs at bottom)");
 
             // (!) Unity, by default, truncates logs to 1k chars (callstack-inclusive).
-            // string encodedLogs = await readStreamToStringAsync(runBuildResponse?.RunBuild200TextPlainByteString); // TODO: Cleanup
-            string logs = runBuildResponse?.Res;
+            string logs = runBuildResponse?.RawResponse.downloadHandler.text;
 
             if (string.IsNullOrEmpty(logs))
             {
-                Debug.LogError($"{logPrefix} Error: Expected {nameof(runBuildResponse.Res)}");
+                Debug.LogError($"{logPrefix} Error: Expected {nameof(runBuildResponse)} response text");
                 return null;
             }
             
@@ -171,7 +175,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             return logChunks;  // streamLogs 
         }
 
-        private async Task startProgressNoticeAsync()
+        private async Task startUploadProgressNoticeAsync()
         {
             TimeSpan delayTimespan = TimeSpan.FromSeconds(5);
             StringBuilder sb = new("...");
@@ -179,6 +183,19 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             while (uploading)
             {
                 Debug.Log($"[HathoraServerBuild] Uploading {sb}");
+                
+                await Task.Delay(delayTimespan);
+                sb.Append(".");
+            }
+        }
+        private async Task startRunBuildProgressNoticeAsync()
+        {
+            TimeSpan delayTimespan = TimeSpan.FromSeconds(5);
+            StringBuilder sb = new("...");
+            
+            while (runningBuild)
+            {
+                Debug.Log($"[HathoraServerBuild] Running build {sb}");
                 
                 await Task.Delay(delayTimespan);
                 sb.Append(".");
@@ -204,7 +221,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
             {
                 IEnumerable<string> chunk = lines.Skip(i).Take(chunkSize);
                 string chunkStr = string.Join("\n", chunk);
-                Debug.Log($"[HathoraServerBuildApiWrapper.onRunCloudBuildDone] result == chunk starting at line {i}: " +
+                Debug.Log($"[HathoraServerBuildApiWrapper.onRunCloudBuildDone - RunBuild logs] result == chunk starting at line {i}: " +
                     $"\n<color=yellow>{chunkStr}</color>");
             }
 
@@ -217,36 +234,36 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         /// <param name="_buildId"></param>
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns byte[] on success</returns>
-        public async Task<Build> GetBuildInfoAsync(
-            int _buildId,
+        public async Task<BuildV3> GetBuildInfoAsync(
+            string _buildId,
             CancellationToken _cancelToken)
         {
             string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(GetBuildInfoAsync)}]";
 
             // Prepare request
-            GetBuildInfoRequest getBuildInfoRequest = new()
+            GetBuildRequest getBuildInfoRequest = new()
             {
                 BuildId = _buildId,
             };
             
             // Get response async =>
-            GetBuildInfoResponse getBuildInfoResponse = null;
+            GetBuildResponse getBuildInfoResponse = null;
             
             try
             {
-                getBuildInfoResponse = await BuildApi.GetBuildInfoAsync(getBuildInfoRequest);
+                getBuildInfoResponse = await BuildApi.GetBuildAsync(getBuildInfoRequest);
             }
             catch (Exception e)
             {
-                Debug.LogError($"{logPrefix} {nameof(BuildApi.GetBuildInfoAsync)} => Error: {e.Message}");
+                Debug.LogError($"{logPrefix} {nameof(BuildApi.GetBuildAsync)} => Error: {e.Message}");
                 return null; // fail
             }
 
-            Build build = getBuildInfoResponse.Build;
-            bool isSuccess = build is { Status: Status.Succeeded };
+            BuildV3 build = getBuildInfoResponse.BuildV3;
+            bool isSuccess = build is { Status: BuildStatus.Succeeded };
             
             Debug.Log($"{logPrefix} Success? {isSuccess}, <color=yellow>" +
-                $"{nameof(getBuildInfoResponse)}: {ToJson(getBuildInfoResponse.Build)}</color>");
+                $"{nameof(getBuildInfoResponse)}: {ToJson(getBuildInfoResponse.BuildV3)}</color>");
 
             getBuildInfoResponse.RawResponse?.Dispose(); // Prevent mem leaks
             return build;
@@ -255,6 +272,112 @@ namespace Hathora.Core.Scripts.Runtime.Server.ApiWrapper
         
         
         #region Utils
+
+        public async Task UploadToMultipartUrl(List<BuildPart> multipartUploadParts, double maxChunkSize, string completeUploadPostRequestUrl, string filePath)
+        {
+            Debug.Log($"~~~~~~{multipartUploadParts.Count} parts, maxChunkSize: {maxChunkSize}");
+            string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(UploadToMultipartUrl)}]";
+            try
+            {
+                List<Task<PartResult>> uploadTasks = new List<Task<PartResult>>();
+
+                foreach (var part in multipartUploadParts)
+                {
+                    uploadTasks.Add(UploadPart(part, filePath, maxChunkSize));
+                }
+
+                var uploadedParts = await Task.WhenAll(uploadTasks);
+
+                string xmlParts = "";
+                foreach (var part in uploadedParts)
+                {
+                    xmlParts += $"<Part><PartNumber>{part.PartNumber}</PartNumber><ETag>{part.ETag}</ETag></Part>";
+                }
+
+                string xmlBody = $"<CompleteMultipartUpload>{xmlParts}</CompleteMultipartUpload>";
+                byte[] xmlBodyBytes = Encoding.UTF8.GetBytes(xmlBody);
+
+                using (UnityWebRequest postRequest = new UnityWebRequest(completeUploadPostRequestUrl, "POST"))
+                {
+                    postRequest.uploadHandler = new UploadHandlerRaw(xmlBodyBytes);
+                    postRequest.downloadHandler = new DownloadHandlerBuffer();
+                    postRequest.SetRequestHeader("Content-Type", "application/xml");
+
+                    await postRequest.SendWebRequest();
+
+                    if (postRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        Debug.Log($"{logPrefix} Upload fully complete with status: {postRequest.responseCode}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"{logPrefix} Error completing multipart upload. Status code: {postRequest.responseCode}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"{logPrefix} Error occurred uploading file: {ex.Message}");
+            }
+        }
+
+        private async Task<PartResult> UploadPart(BuildPart part, string filePath, double maxChunkSize)
+        {
+            string logPrefix = $"[{nameof(HathoraServerBuildApiWrapper)}.{nameof(UploadToMultipartUrl)}]";
+            try
+            {
+                double startByteForPart = (part.PartNumber - 1) * maxChunkSize;
+                double endByteForPart = Math.Min(part.PartNumber * maxChunkSize, new FileInfo(filePath).Length);
+                double partSize = endByteForPart - startByteForPart;
+                byte[] fileChunk = new byte[(int)partSize];
+                
+                Debug.Log($"~~~~~{part.PartNumber} parts, chunkSize: {partSize}, arrayMaxLength: {fileChunk.Length}");
+                // Open the file and read the specific chunk
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    fileStream.Seek((long)startByteForPart, SeekOrigin.Begin);
+                    int bytesRead = await fileStream.ReadAsync(fileChunk, 0, (int)partSize);
+
+                    if (bytesRead != (int)partSize)
+                    {
+                        throw new Exception($"Failed to read the expected number of bytes for part {part.PartNumber}");
+                    }
+                }
+
+                using (UnityWebRequest putRequest = new (part.PutRequestUrl, UnityWebRequest.kHttpVerbPUT))
+                {
+                    putRequest.uploadHandler = new UploadHandlerRaw(fileChunk);
+                    putRequest.SetRequestHeader("Content-Type", "application/octet-stream");
+
+                    await putRequest.SendWebRequest();
+
+                    if (putRequest.result != UnityWebRequest.Result.Success)
+                    {
+                        throw new Exception($"Failed to upload part {part.PartNumber}, status: {putRequest.responseCode}");
+                    }
+
+                    string eTag = putRequest.GetResponseHeader("ETag");
+                    if (string.IsNullOrEmpty(eTag))
+                    {
+                        throw new Exception($"ETag not found in response headers for part {part.PartNumber}");
+                    }
+
+                    Debug.Log($"{logPrefix} Upload part {part.PartNumber} complete with status: {putRequest.responseCode}");
+                    return new PartResult { ETag = eTag, PartNumber = part.PartNumber };
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"{logPrefix} Error uploading part {part.PartNumber}: {ex.Message}");
+                throw;
+            }
+        }
+
+        public class PartResult
+        {
+            public string ETag { get; set; }
+            public double PartNumber { get; set; }
+        }
         private static byte[] toByteArray(Stream _stream)
         {
             _stream.Position = 0;

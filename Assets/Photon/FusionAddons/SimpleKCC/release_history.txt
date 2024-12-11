@@ -1,6 +1,34 @@
 Photon Fusion Simple KCC Addon - Release History
 
-Last tested with Fusion SDK 2.0.0-RC-801
+Last tested with Fusion SDK 2.0.0-RC3-807
+
+Version 2.0.6
+- Fixed stuck on the edge when finishing step-up.
+- Added input accumulators - FloatAccumulator, Vector2Accumulator, Vector3Accumulator.
+    - These classes support accumulation of raw values, their smoothing and tick-aligned delta consumption.
+    - Typical use-case is accumulation of mouse delta passed through a network struct.
+    - The tick-aligned accumulation ensures that snapshot interpolated value in Render() will be smooth.
+- Fixed downward sphere cast check in step-up.
+- Added SimpleKCC.ProjectOnGround(). This is useful when calculating XZ input => XYZ velocity to move along ground tangent.
+
+Version 2.0.5
+Important
+============================================================
+! Simple KCC proxy is no longer simulated by default. If you call Runner.SetIsSimulated(Object, true) from other script, the KCC will behave as predicted.
+! Jump impulse vector in Move() function converted to float => XZ is not supported.
+! Gravity vector in SetGravity() function converted to float => XZ is not supported.
+
+Changes
+============================================================
+- Added gizmos when KCC is selected.
+- Added KCCSettings.ForcePredictedLookRotation - skips look rotation interpolation in render for local character and can be used for extra look responsiveness with other properties being interpolated.
+- Added KCCSettings.ProxyInterpolation - controls interpolations of networked properties from network buffer, and propagation to Collider, Transform and Rigidbody components.
+- Added KCCSettings.CompressNetworkPosition - optional network traffic reduction for non-player characters. Full precision position is synchronized by default.
+- Improved step detection configuration (added min push-back to trigger step-up, toggle to require ground target point, variable ground check radius). Backport from Advanced KCC 2.0.
+- Removed Runner.SetIsSimulated(Object, true) from KCC - proxies are no longer simulated.
+- Removed networked keep-alive flag.
+- Performance optimizations for proxies.
+- Fixed projection of depenetration vector, resulting in jitter on slopes.
 
 Version 2.0.4
 - Changed root namespace from Fusion.SimpleKCC to Fusion.Addons.SimpleKCC.

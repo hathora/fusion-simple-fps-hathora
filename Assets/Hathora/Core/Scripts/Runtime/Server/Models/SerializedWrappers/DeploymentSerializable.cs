@@ -19,26 +19,17 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
     [Serializable]
     public class DeploymentSerializable
     {
-        [SerializeField, JsonProperty("planName")]
-        private PlanName _planName;
-        public PlanName PlanName 
-        { 
-            get => _planName;
-            set => _planName = value;
-        }
-
-        // [Obsolete("Deprecated - pending removed")]
-        // [SerializeField, JsonProperty("transportType")]
-        // private DeploymentTransportType _transportType;
-        // public DeploymentTransportType TransportType 
+        // [SerializeField, JsonProperty("planName")]
+        // private PlanName _planName;
+        // public PlanName PlanName 
         // { 
-        //     get => _transportType;
-        //     set => _transportType = value;
+        //     get => _planName;
+        //     set => _planName = value;
         // }
         
         [SerializeField, JsonProperty("env")] // TODO
-        private List<Env> _env;
-        public List<Env> Env
+        private List<ApplicationWithLatestDeploymentAndBuildEnv> _env;
+        public List<ApplicationWithLatestDeploymentAndBuildEnv> Env
         {
             get => _env;
             set => _env = value;
@@ -120,16 +111,16 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
         }
         
         [SerializeField, JsonProperty("deploymentId")]
-        private int _deploymentId;
-        public int DeploymentId 
+        private string _deploymentId;
+        public string DeploymentId 
         { 
             get => _deploymentId;
             set => _deploymentId = value;
         }
         
         [SerializeField, JsonProperty("buildId")]
-        private int _buildId;
-        public int BuildId 
+        private string _buildId;
+        public string BuildId 
         { 
             get => _buildId;
             set => _buildId = value;
@@ -150,8 +141,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
             if (_deployment == null)
                 return;
 
-            this.PlanName = _deployment.PlanName;
-            // this.TransportType = _deployment.TransportType; // Deprecated - to be removed
+            // this.PlanName = _deployment.PlanName;
             this.RoomsPerProcess = _deployment.RoomsPerProcess;
             this.defaultContainerPortSerializable = new ContainerPortSerializable(_deployment.DefaultContainerPort);
             this.AdditionalContainerPorts = _deployment.AdditionalContainerPorts;
@@ -169,8 +159,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
         {
             Deployment deployment = new()
             {
-                PlanName = this.PlanName,
-                // TransportType = this.TransportType, // Deprecated - to be removed
+                // PlanName = this.PlanName,
                 RoomsPerProcess = this.RoomsPerProcess,
                 DefaultContainerPort = this.DefaultContainerPort,
                 AdditionalContainerPorts = this.AdditionalContainerPorts,

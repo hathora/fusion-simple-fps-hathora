@@ -98,7 +98,7 @@ namespace Fusion.Addons.Hathora
 		{
 			LogInfo($"Initializing server peer. RoomId: {room.RoomId}");
 
-			if (FindUnusedPort(serverContext, out ExposedPort exposedPort) == false)
+			if (FindUnusedPort(serverContext, out ProcessV3ExposedPort exposedPort) == false)
 			{
 				LogInfo($"Failed to initialize server peer, all ports are used. RoomId: {room.RoomId}");
 				return false;
@@ -209,6 +209,17 @@ namespace Fusion.Addons.Hathora
 			return default;
 		}
 
+		private ServerPeer FindServerPeer(ProcessV3ExposedPort port)
+		{
+			for (int i = 0, count = _serverPeers.Count; i < count; ++i)
+			{
+				ServerPeer serverPeer = _serverPeers[i];
+				if (serverPeer.PortName == port.Name)
+					return serverPeer;
+			}
+
+			return default;
+		}
 		private ServerPeer FindServerPeer(ExposedPort port)
 		{
 			for (int i = 0, count = _serverPeers.Count; i < count; ++i)
@@ -221,7 +232,7 @@ namespace Fusion.Addons.Hathora
 			return default;
 		}
 
-		private bool FindUnusedPort(HathoraServerContext serverContext, out ExposedPort port)
+		private bool FindUnusedPort(HathoraServerContext serverContext, out ProcessV3ExposedPort port)
 		{
 			port = default;
 
@@ -238,12 +249,22 @@ namespace Fusion.Addons.Hathora
 			{
 				if (FindServerPeer(additionalPort) == null)
 				{
-					port = additionalPort;
+					port = ExposedPortToProcessV3ExposedPort(additionalPort);
 					return true;
 				}
 			}
 
 			return false;
+		}
+
+		private ProcessV3ExposedPort ExposedPortToProcessV3ExposedPort(ExposedPort port)
+		{
+			ProcessV3ExposedPort newPort = new ProcessV3ExposedPort();
+			newPort.Host = port.Host;
+			newPort.Port = port.Port;
+			newPort.Name = port.Name;
+			newPort.TransportType = port.TransportType;
+			return newPort;
 		}
 
 		private void LogInfo   (object message) { if (_enableLogs == true) Debug.Log       ($"[{nameof(HathoraServer)}][{Time.realtimeSinceStartup:F3}] {message}", gameObject); }

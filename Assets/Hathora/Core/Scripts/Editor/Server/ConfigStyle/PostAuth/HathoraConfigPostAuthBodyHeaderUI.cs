@@ -166,7 +166,11 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             if (clickedAppRefreshBtn || recentlyAuthed)
             {
                 // TODO: Replace disabled btn with a separate cancel btn
-                await onRefreshAppsListBtnClick();
+                if (!isRefreshingExistingApps) // needed to prevent extra calls being triggered (causing 429 error)
+                {
+                    await onRefreshAppsListBtnClick();
+                }
+
                 ServerConfig.HathoraCoreOpts.DevAuthOpts.RecentlyAuthed = false;
             }
         }
@@ -287,12 +291,11 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             {
                 HathoraDevToken = ServerConfig.HathoraCoreOpts.DevAuthOpts.HathoraDevToken,
             };
-            
             HathoraServerAppApiWrapper appApiWrapper = new(
-                new HathoraCloudSDK(security, ServerConfig.HathoraCoreOpts.AppId), 
+                new HathoraCloudSDK(security, null, ServerConfig.HathoraCoreOpts.AppId), 
                 ServerConfig);
 
-            List<ApplicationWithDeployment> apps = null;
+            List<ApplicationWithLatestDeploymentAndBuild> apps = null;
             apps = await appApiWrapper.GetAppsAsync();
 
             if (apps == null)

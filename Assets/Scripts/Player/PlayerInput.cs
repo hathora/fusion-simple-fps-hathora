@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Fusion;
+using Fusion.Addons.SimpleKCC;
 
 namespace SimpleFPS
 {
@@ -33,7 +34,8 @@ namespace SimpleFPS
 	{
 		public static float LookSensitivity;
 
-		private NetworkedInput _accumulatedInput;
+		private NetworkedInput     _accumulatedInput;
+		private Vector2Accumulator _lookRotationAccumulator = new Vector2Accumulator(0.02f, true);
 
 		public override void Spawned()
 		{
@@ -95,8 +97,8 @@ namespace SimpleFPS
 
 				var lookRotationDelta = new Vector2(-mouseDelta.y, mouseDelta.x);
 				lookRotationDelta *= LookSensitivity / 60f;
+				_lookRotationAccumulator.Accumulate(lookRotationDelta);
 
-				_accumulatedInput.LookRotationDelta += lookRotationDelta;
 				_accumulatedInput.Buttons.Set(EInputButton.Fire, mouse.leftButton.isPressed);
 			}
 
@@ -122,11 +124,12 @@ namespace SimpleFPS
 
 		private void OnInput(NetworkRunner runner, NetworkInput networkInput)
 		{
+			// Mouse movement (delta values) is aligned to engine update.
+			// To get perfectly smooth interpolated look, we need to align the mouse input with Fusion ticks.
+			_accumulatedInput.LookRotationDelta = _lookRotationAccumulator.ConsumeTickAligned(runner);
+
 			// Fusion polls accumulated input. This callback can be executed multiple times in a row if there is a performance spike.
 			networkInput.Set(_accumulatedInput);
-
-			// We have to keep whole input except look rotation delta, this needs to be cleared so it's not used in subsequent OnInput() call.
-			_accumulatedInput.LookRotationDelta = default;
 		}
 	}
 }
