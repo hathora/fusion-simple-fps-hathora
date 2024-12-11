@@ -45,7 +45,7 @@ namespace Fusion.Addons.Hathora
 			_hathoraLobbies = default;
 
 			// 1. Login to Hathora cloud.
-			LoginResponse loginResponse = await AuthLoginAsync();
+			PlayerTokenObject loginResponse = await AuthLoginAsync();
 			if (string.IsNullOrEmpty(loginResponse.Token) == true)
 			{
 				LogError($"Hathora authentication login failed!");

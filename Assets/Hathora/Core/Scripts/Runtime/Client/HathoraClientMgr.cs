@@ -113,7 +113,7 @@ namespace Hathora.Core.Scripts.Runtime.Client
         
         private void initHathoraSdk()
         {
-            this.HathoraSdk = new HathoraCloudSDK(null, hathoraClientConfig.AppId);
+            this.HathoraSdk = new HathoraCloudSDK(null, null, hathoraClientConfig.AppId);
         }
 
         /// <summary>Init all Client API wrappers, passing HathoraSdk instance.</summary>
@@ -150,9 +150,9 @@ namespace Hathora.Core.Scripts.Runtime.Client
         /// - Sets `PlayerAuthToken` cache
         /// - Callback @ virtual OnAuthLoginComplete(isSuccess)
         /// </summary>
-        public async Task<LoginResponse> AuthLoginAsync(CancellationToken _cancelToken = default)
+        public async Task<PlayerTokenObject> AuthLoginAsync(CancellationToken _cancelToken = default)
         {
-            LoginResponse authResult = await apis.ClientAuthApiWrapper.ClientAuthAsync(_cancelToken);
+            PlayerTokenObject authResult = await apis.ClientAuthApiWrapper.ClientAuthAsync(_cancelToken);
             bool isSuccess = !string.IsNullOrEmpty(authResult.Token);
             
             hathoraClientSession.InitNetSession(authResult.Token);

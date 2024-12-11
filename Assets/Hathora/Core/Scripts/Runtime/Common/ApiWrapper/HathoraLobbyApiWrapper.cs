@@ -21,7 +21,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
     /// </summary>
     public class HathoraLobbyApiWrapper : HathoraApiWrapperBase
     {
-        protected LobbyV3SDK LobbyApi { get; }
+        protected ILobbiesV3 LobbyApi { get; }
 
         public enum GetLobbyBy
         {
@@ -38,7 +38,7 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
             Debug.Log($"[{nameof(HathoraLobbyApiWrapper)}.Constructor] " +
                 "Initializing Common API...");
             
-            this.LobbyApi = _hathoraSdk.LobbyV3 as LobbyV3SDK;
+            this.LobbyApi = _hathoraSdk.LobbiesV3;
         }
 
 
@@ -133,16 +133,15 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
             }
             catch (Exception e)
             {
+                if (e is HathoraCloud.Models.Errors.ApiError)
+                {
+                    Debug.LogError($"{logPrefix} 404: {e.Message} - " +
+                        "Tip: If a server made a Room without a lobby, instead use the Room api (rather than Lobby api)");
+                }
                 Debug.LogError($"{logPrefix} {nameof(LobbyApi.GetLobbyInfoByRoomIdAsync)} => Error: {e.Message}");
                 return null; // fail
             }
-            
-            if (getLobbyInfoByRoomIdResponse.StatusCode == 404)
-            {
-                Debug.LogError($"{logPrefix} 404: {getLobbyInfoByRoomIdResponse.ApiError.Message} - " +
-                    "Tip: If a server made a Room without a lobby, instead use the Room api (rather than Lobby api)");
-            }
-            
+
             Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(getLobbyInfoByRoomIdResponse)}: " +
                 $"{ToJson(getLobbyInfoByRoomIdResponse.LobbyV3)}</color>");      
             
@@ -175,14 +174,13 @@ namespace Hathora.Core.Scripts.Runtime.Common.ApiWrapper
             }
             catch (Exception e)
             {
+                if (e is HathoraCloud.Models.Errors.ApiError)
+                {
+                    Debug.LogError($"{logPrefix} 404: {e.Message} - " +
+                        "Tip: If a server made a Room without a lobby, instead use the Room api (rather than Lobby api)");
+                }
                 Debug.LogError($"{logPrefix} {nameof(LobbyApi.GetLobbyInfoByShortCodeAsync)} => Error: {e.Message}");
                 return null; // fail
-            }
-            
-            if (getLobbyInfoByShortCodeResponse.StatusCode == 404)
-            {
-                Debug.LogError($"{logPrefix} 404: {getLobbyInfoByShortCodeResponse.ApiError?.Message} - " +
-                    "Tip: If a server made a Room without a lobby, instead use the Room api (rather than Lobby api)");
             }
             
             Debug.Log($"{logPrefix} Success: <color=yellow>{nameof(getLobbyInfoByShortCodeResponse)}: " +

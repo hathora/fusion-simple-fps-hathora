@@ -33,6 +33,9 @@
         "EnableAutoUpdate": false,
         "UpdateDelay": 10
     },
+    "EncryptionConfig": {
+        "EnableEncryption": false
+    },
     "NetworkConditions": {
         "Enabled": false,
         "DelayShape": 0,

@@ -27,7 +27,7 @@ namespace Hathora.Core.Scripts.Runtime.Server
     {
         #region Vars
         public static HathoraServerMgr Singleton { get; private set; }
-
+        
         /// <summary>Set null/empty to !fake a procId in the Editor</summary>
         [SerializeField, Tooltip("When in the Editor, we'll get this Hathora ProcessInfo " +
              "as if deployed on Hathora; useful for debugging")]
@@ -38,7 +38,7 @@ namespace Hathora.Core.Scripts.Runtime.Server
         [SerializeField, Tooltip("When in the Editor, can overide HATHORA_REGION envVar")]
         private Region debugEditorMockRegion;
         protected Region DebugEditorMockRegion => debugEditorMockRegion;
-
+        
         [Header("(!) Top menu: Hathora/ServerConfigFinder")]
         [SerializeField]
         private HathoraServerConfig hathoraServerConfig;
@@ -46,7 +46,7 @@ namespace Hathora.Core.Scripts.Runtime.Server
         {
             get {
                 string logPrefix = $"[{nameof(HathoraServerMgr)}.{nameof(hathoraServerConfig)}.get]";
-
+                
 				#if !UNITY_SERVER && !UNITY_EDITOR
 				Debug.LogError("[HathoraServerMgr] (!) Tried to get hathoraServerConfig " +
                     "from Server when NOT a <server || editor>");
@@ -62,7 +62,7 @@ namespace Hathora.Core.Scripts.Runtime.Server
                 return hathoraServerConfig;
             }
         }
-
+        
         /// <summary>Set to 'true' to track changes to active rooms (multiple rooms per process)</summary>
         [SerializeField, Tooltip("Enable tracking updates to active rooms for process")]
         private bool enableActiveRoomUpdates;
@@ -74,31 +74,31 @@ namespace Hathora.Core.Scripts.Runtime.Server
         ///   - For example, GetServerContext() gets: ProcessId, Process, Room, ConnectionInfo, [Lobby].
         /// </summary>
         protected ServerApiContainer Apis { get; private set; }
-
+        
         /// <summary>Direct SDK access: Inits with info from `HathoraServerConfig`</summary>
         public HathoraCloudSDK HathoraSdk { get; private set; }
 
         /// <summary>(!) This is set async on Awake; check for null</summary>
         private volatile HathoraServerContext serverContext;
-
+        
         /// <summary>Set @ Awake, and only if deployed on Hathora</summary>
         private string hathoraProcessIdEnvVar;
         private Region hathoraRegionEnvVar;
-
+        
         /// <summary>
         /// This will only be true if we're deployed on Hathora, by verifying
         /// a special env var ("HATHORA_PROCESS_ID").
         /// </summary>
         public bool IsDeployedOnHathora =>
             !string.IsNullOrEmpty(hathoraProcessIdEnvVar);
-
+        
         public static event Action<HathoraServerContext> OnInitializedEvent;
         public static event Action<List<RoomWithoutAllocations>> OnActiveRoomsRefreshed;
         public static event Action<RoomWithoutAllocations> OnActiveRoomAdded;
         public static event Action<RoomWithoutAllocations> OnActiveRoomRemoved;
         #endregion // Vars
 
-
+        
         #region Init
         protected virtual void Awake()
         {
@@ -107,14 +107,14 @@ namespace Hathora.Core.Scripts.Runtime.Server
             Destroy(this);
             return;
 #endif
-
-
+            
+            
             Debug.Log($"[{nameof(HathoraServerMgr)}] Awake");
-
+            
             setSingleton();
             initHathoraSdk();
             InitApiWrappers();
-
+            
 
 #if (UNITY_EDITOR)
             // Optional mocked ID for debugging: Create a Room manually in Hathora console => paste ProcessId @ debugEditorMockProcId
@@ -125,9 +125,9 @@ namespace Hathora.Core.Scripts.Runtime.Server
             hathoraRegionEnvVar = getServerDeployedRegion();
 #endif
 
-            _ = GetHathoraServerContextAsync(_throwErrIfNoLobby: false); // !await; sets `HathoraServerContext ServerContext` ^
+            _ = GetHathoraServerContextAsync(); // !await; sets `HathoraServerContext ServerContext` ^
         }
-
+        
         /// <summary>If we were not server || editor, we'd already be destroyed @ Awake</summary>
         protected virtual void Start()
         {
@@ -145,7 +145,7 @@ namespace Hathora.Core.Scripts.Runtime.Server
             }
             return Environment.GetEnvironmentVariable("HATHORA_PROCESS_ID");
         }
-
+        
         protected virtual Region getServerDeployedRegion(Region?_overrideRegionVal = null)
         {
             if (_overrideRegionVal != null)
@@ -176,32 +176,32 @@ namespace Hathora.Core.Scripts.Runtime.Server
             {
                 Debug.LogError($"[{nameof(HathoraServerMgr)}.{nameof(setSingleton)}] " +
                     "Error: Destroying dupe");
-
+                
                 Destroy(gameObject);
                 return;
             }
-
+            
             Singleton = this;
         }
-
+        
         private void initHathoraSdk()
         {
             if (!CanInitSdk())
                 return;
-
+            
             Security security = new()
             {
                 HathoraDevToken = hathoraServerConfig.HathoraCoreOpts.DevAuthOpts.HathoraDevToken,
             };
-
-            this.HathoraSdk = new HathoraCloudSDK(security, hathoraServerConfig.HathoraCoreOpts.AppId);
+            
+            this.HathoraSdk = new HathoraCloudSDK(security, null, hathoraServerConfig.HathoraCoreOpts.AppId);
         }
 
         /// <returns>isValid</returns>
         protected virtual bool CanInitSdk()
         {
             string logPrefix = $"[{nameof(HathoraServerMgr)}.{nameof(CanInitSdk)}]";
-
+            
             if (hathoraServerConfig == null)
             {
 #if UNITY_SERVER
@@ -237,8 +237,8 @@ namespace Hathora.Core.Scripts.Runtime.Server
             Apis = new ServerApiContainer(HathoraSdk, hathoraServerConfig);
         }
         #endregion // Init
-
-
+        
+        
         #region ServerContext Getters
         /// <summary>
         /// Set @ Awake async, chained through 3 API calls - async to prevent race conditions.
@@ -255,10 +255,10 @@ namespace Hathora.Core.Scripts.Runtime.Server
             if (!isMockTesting)
                 return null; // For headless servers deployed on Hathora only (and !debugEditorMockProcId)
 #endif
-
+            
             using CancellationTokenSource cts = new();
             cts.CancelAfter(TimeSpan.FromSeconds(10));
-
+            
             if (serverContext != null)
                 return serverContext;
 
@@ -266,10 +266,10 @@ namespace Hathora.Core.Scripts.Runtime.Server
             string logPrefix = $"[{nameof(HathoraServerMgr)}.{nameof(GetCachedServerContextAsync)}]";
             Debug.Log($"{logPrefix} <color=orange>(!)</color> serverContext == null: " +
                 "Awaiting up to 10s for val set async");
-
+            
             return await waitForServerContextAsync(cts.Token);
         }
-
+        
         /// <summary>
         /// [Coroutine alternative to async/await] Set @ Awake async, chained through 3 API calls -
         /// Async to prevent race conditions.
@@ -310,15 +310,15 @@ namespace Hathora.Core.Scripts.Runtime.Server
                     Debug.LogError($"{logPrefix} Timed out after 10s");
                     return null;
                 }
-
+                
                 await Task.Delay(TimeSpan.FromSeconds(0.1), _cancelToken);
             }
 
             return serverContext;
         }
         #endregion // ServerContext Getters
-
-
+        
+        
         #region Chained API calls outside Init
         /// <summary>
         /// If Deployed (not localhost), get HathoraServerContext: { Room, Process, [Lobby], utils }.
@@ -329,11 +329,9 @@ namespace Hathora.Core.Scripts.Runtime.Server
         /// - Calls automatically @ Awake => triggers `OnInitializedEvent` on success.
         /// - Caches locally @ serverContext; public get via GetCachedServerContextAsync().
         /// </summary>
-        /// <param name="_throwErrIfNoLobby">Be extra sure to try/catch this, if true</param>
         /// <param name="_cancelToken"></param>
         /// <returns>Triggers `OnInitializedEvent` event on success</returns>
         public async Task<HathoraServerContext> GetHathoraServerContextAsync(
-            bool _throwErrIfNoLobby,
             CancellationToken _cancelToken = default)
         {
             string logPrefix = $"[{nameof(HathoraServerMgr)}.{nameof(GetHathoraServerContextAsync)}]";
@@ -346,23 +344,23 @@ namespace Hathora.Core.Scripts.Runtime.Server
                     "(1) HathoraServerConfig is serialized to a scene HathoraServerMgr, " +
                     "(2) We're deployed to Hathora (if testing locally, ignore this err)");
                 #endif // UNITY_SERVER
-
+                
                 return null;
             }
-
+            
             // GetCachedServerContext() will await !null, so we don't want to the main var *yet*
             HathoraServerContext tempServerContext = new HathoraServerContext(hathoraProcessIdEnvVar, hathoraRegionEnvVar);
-
+            
             // ----------------
             // Get Process from env var "HATHORA_PROCESS_ID" => We probably cached this, already, @ )
             // We await => just in case we called this early, to prevent race conditions
-            Process processInfo = await Apis.ServerProcessApiWrapper.GetProcessInfoAsync(
-                hathoraProcessIdEnvVar,
+            ProcessV3 processInfo = await Apis.ServerProcessApiWrapper.GetProcessInfoAsync(
+                hathoraProcessIdEnvVar, 
                 _returnNullOnStoppedProcess: true,
                 _cancelToken: _cancelToken);
-
+            
             string procId = processInfo?.ProcessId;
-
+            
             if (_cancelToken.IsCancellationRequested)
             {
                 Debug.LogError($"{logPrefix} Cancelled - `OnInitialized` event will !trigger");
@@ -374,26 +372,26 @@ namespace Hathora.Core.Scripts.Runtime.Server
                     "to your scene's `HathoraServerMgr` (often nested in a `HathoraManager` root GameObject)?";
 
                 // Are we debugging in the Editor? Add +info
-                bool isMockDebuggingInEditor = UnityEngine.Application.isEditor &&
+                bool isMockDebuggingInEditor = UnityEngine.Application.isEditor && 
                     !string.IsNullOrEmpty(debugEditorMockProcId);
                 if (isMockDebuggingInEditor)
                     errMsg += " <b>Since isEditor && debugEditorMockProcId, `your HathoraServerMgr.debugEditorMockProcId` " +
                         "is likely stale.</b> Create a new Room -> Update your `debugEditorMockProcId` -> try again.";
-
+                
                 Debug.LogError(errMsg);
                 return null;
             }
-
+            
             tempServerContext.ProcessInfo = processInfo;
 
             // ----------------
             // Get all active Rooms by ProcessId =>
-            List<RoomWithoutAllocations> activeRooms = await
+            List<RoomWithoutAllocations> activeRooms = await 
                 Apis.ServerRoomApiWrapper.ServerGetActiveRoomsForProcessAsync(procId, _cancelToken);
 
             // Get 1st Room -> validate
             RoomWithoutAllocations firstActiveRoom = activeRooms?.FirstOrDefault();
-
+            
             if (_cancelToken.IsCancellationRequested)
             {
                 Debug.LogError($"{logPrefix} Cancelled - `OnInitialized` event will !trigger");
@@ -406,11 +404,10 @@ namespace Hathora.Core.Scripts.Runtime.Server
             }
 
             tempServerContext.ActiveRoomsForProcess = activeRooms;
-
+			
             // ----------------
-            // We have Room info, but we *may* need Lobby: Get from RoomId =>
-            // TODO: This may soon change, where Room info may include Lobby info.
-            // TODO: When implemented, remove this block (minus validation).
+            // We have Room info, but we *may* need Lobby: Get via RoomId
+            // NOTE: Lobby is expected to be null in cases when room is created via "CreateRoom"
             LobbyV3 lobby = null;
             try
             {
@@ -421,15 +418,8 @@ namespace Hathora.Core.Scripts.Runtime.Server
             }
             catch (Exception e)
             {
-                // Should 404 if !Lobby, returning null
-                if (_throwErrIfNoLobby)
-                {
-                    Debug.LogError($"Error: {e}");
-                    throw;
-                }
-
-                Debug.Log($"{logPrefix} <b>!Lobby, but likely expected</b> " +
-                    "(since !_throwErrIfNoLobby) - continuing...");
+                Debug.Log($"{logPrefix} <b>Matching Hathora Lobby not found for roomId:{firstActiveRoom.RoomId}," +
+                          $"but expected if room created via CreateRoom</b> (LobbyService not being used) - {e}");
             }
 
             if (_cancelToken.IsCancellationRequested)

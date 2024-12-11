@@ -397,11 +397,11 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
             // Catch errs so we can reset the UI on fail
             try
             {
-                Deployment deployment = await HathoraServerDeploy.DeployToHathoraAsync(
+                DeploymentV3 deployment = await HathoraServerDeploy.DeployToHathoraAsync(
                     ServerConfig,
                     cancelBuildTokenSrc.Token);
 
-                bool isSuccess = deployment?.DeploymentId > 0;
+                bool isSuccess = !string.IsNullOrEmpty(deployment?.DeploymentId);
                 if (isSuccess)
                     onDeployAppSuccess(deployment);
                 else
@@ -432,7 +432,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
         }
         
         /// <summary>Step 2 of 4</summary>
-        private void onDeployAppStatus_2BuildReqComplete(Build _build)
+        private void onDeployAppStatus_2BuildReqComplete(CreatedBuildV3WithMultipartUrls _build)
         {
             Debug.Log("[HathoraConfigPostAuthBodyDeployUI] <color=yellow>" +
                 "onDeployAppStatus_2BuildReqComplete</color>");
@@ -451,7 +451,7 @@ namespace Hathora.Core.Scripts.Editor.Server.ConfigStyle.PostAuth
         /// Cache last successful Deployment for the session
         /// </summary>
         /// <param name="_deployment"></param>
-        private void onDeployAppSuccess(Deployment _deployment) =>
+        private void onDeployAppSuccess(DeploymentV3 _deployment) =>
             ServerConfig.HathoraDeployOpts.LastDeployment = _deployment;
         #endregion // Event Logic
         

@@ -1201,8 +1201,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 3617898819
   ObjectInterest: 1
-  _DestroyWhenStateAuthorityLeaves: 0
-  _AllowStateAuthorityOverride: 0
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
@@ -1311,11 +1309,17 @@ MonoBehaviour:
     CollisionLayerMask:
       serializedVersion: 2
       m_Bits: 129
+    ProxyInterpolationMode: 0
     TeleportThreshold: 1
     AntiJitterDistance: {x: 0.025, y: 0.01}
+    CompressNetworkPosition: 0
+    ForcePredictedLookRotation: 0
     StepHeight: 0.5
     StepDepth: 0.2
     StepSpeed: 1
+    StepMinPushBack: 0.5
+    StepGroundCheckRadiusScale: 0.5
+    StepRequireGroundTarget: 0
     SnapDistance: 0.25
     SnapSpeed: 4
 --- !u!114 &7240184518650970733

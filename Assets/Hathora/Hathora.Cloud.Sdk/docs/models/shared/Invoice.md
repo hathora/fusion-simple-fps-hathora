@@ -1,7 +1,5 @@
 # Invoice
 
-Billing types
-
 
 ## Fields
 
@@ -12,5 +10,5 @@ Billing types
 | `Id`                                                                                  | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
 | `Month`                                                                               | *double*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
 | `PdfUrl`                                                                              | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
-| `Status`                                                                              | [InvoiceStatus](../../models/shared/InvoiceStatus.md)                                 | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `Status`                                                                              | [InvoiceStatus](../../Models/Shared/InvoiceStatus.md)                                 | :heavy_check_mark:                                                                    | N/A                                                                                   |
 | `Year`                                                                                | *double*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |

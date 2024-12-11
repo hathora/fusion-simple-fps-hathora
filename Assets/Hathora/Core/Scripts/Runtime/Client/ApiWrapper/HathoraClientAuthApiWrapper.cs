@@ -35,7 +35,7 @@ namespace Hathora.Core.Scripts.Runtime.Client.ApiWrapper
         #region Client Auth Async Hathora SDK Calls
         /// <param name="_cancelToken">TODO</param>
         /// <returns>Returns AuthResult on success</returns>
-        public async Task<LoginResponse> ClientAuthAsync(CancellationToken _cancelToken = default)
+        public async Task<PlayerTokenObject> ClientAuthAsync(CancellationToken _cancelToken = default)
         {
             string logPrefix = $"[{nameof(HathoraClientAuthApiWrapper)}.{nameof(ClientAuthAsync)}]"; 
             Debug.Log($"{logPrefix} Start");
@@ -53,21 +53,21 @@ namespace Hathora.Core.Scripts.Runtime.Client.ApiWrapper
                 return null; // fail
             }
 
-            string clientAuthToken = loginAnonResponse.LoginResponse?.Token; 
+            string clientAuthToken = loginAnonResponse.PlayerTokenObject?.Token; 
             bool isAuthed = !string.IsNullOrEmpty(clientAuthToken); 
             
             
 #if UNITY_EDITOR
             // For security, we probably only want to log this in the editor
             Debug.Log($"{logPrefix} <color=yellow>{nameof(isAuthed)}: {isAuthed}, " +
-                $"{nameof(loginAnonResponse.LoginResponse)}: {ToJson(loginAnonResponse.LoginResponse)}</color>");
+                $"{nameof(loginAnonResponse.PlayerTokenObject)}: {ToJson(loginAnonResponse.PlayerTokenObject)}</color>");
 #else
             Debug.Log($"{logPrefix} {nameof(isAuthed)}: {isAuthed}");
 #endif
 
 
             loginAnonResponse.RawResponse?.Dispose(); // Prevent mem leaks
-            return loginAnonResponse.LoginResponse;
+            return loginAnonResponse.PlayerTokenObject;
         }
         #endregion // Server Auth Async Hathora SDK Calls
     }

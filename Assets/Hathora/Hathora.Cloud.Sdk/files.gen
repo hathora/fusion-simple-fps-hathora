@@ -6,7 +6,7 @@ HathoraCloud/DeploymentV1.cs
 HathoraCloud/DiscoveryV1.cs
 HathoraCloud/LobbyV1.cs
 HathoraCloud/LobbyV2.cs
-HathoraCloud/LobbyV3.cs
+HathoraCloud/LobbyV3SDK.cs
 HathoraCloud/LogV1.cs
 HathoraCloud/ManagementV1.cs
 HathoraCloud/MetricsV1.cs
@@ -105,6 +105,8 @@ HathoraCloud/Models/Operations/GetLobbyInfoByShortCodeRequest.cs
 HathoraCloud/Models/Operations/GetLobbyInfoByShortCodeResponse.cs
 HathoraCloud/Models/Operations/ListActivePublicLobbiesRequest.cs
 HathoraCloud/Models/Operations/ListActivePublicLobbiesResponse.cs
+HathoraCloud/Models/Operations/DownloadLogForProcessRequest.cs
+HathoraCloud/Models/Operations/DownloadLogForProcessResponse.cs
 HathoraCloud/Models/Operations/GetLogsForAppRequest.cs
 HathoraCloud/Models/Operations/GetLogsForAppResponse.cs
 HathoraCloud/Models/Operations/GetLogsForDeploymentRequest.cs
@@ -207,11 +209,12 @@ HathoraCloud/Models/Shared/CreateRoomParams.cs
 HathoraCloud/Models/Shared/CurrentAllocation.cs
 HathoraCloud/Models/Shared/Room.cs
 HathoraCloud/Models/Shared/RoomAllocation.cs
+HathoraCloud/Models/Shared/CreateRoomResponseStatus.cs
+HathoraCloud/Models/Shared/CreateRoomResponse.cs
 HathoraCloud/Models/Shared/ConnectionInfoV2Status.cs
 HathoraCloud/Models/Shared/ConnectionInfoV2.cs
 HathoraCloud/Models/Shared/UpdateRoomConfigParams.cs
 HathoraCloud/Models/Shared/Security.cs
-USAGE.md
 docs/Models/Operations/CreateAppResponse.md
 docs/Models/Operations/DeleteAppRequest.md
 docs/Models/Operations/DeleteAppResponse.md
@@ -287,6 +290,8 @@ docs/Models/Operations/GetLobbyInfoByShortCodeRequest.md
 docs/Models/Operations/GetLobbyInfoByShortCodeResponse.md
 docs/Models/Operations/ListActivePublicLobbiesRequest.md
 docs/Models/Operations/ListActivePublicLobbiesResponse.md
+docs/Models/Operations/DownloadLogForProcessRequest.md
+docs/Models/Operations/DownloadLogForProcessResponse.md
 docs/Models/Operations/GetLogsForAppRequest.md
 docs/Models/Operations/GetLogsForAppResponse.md
 docs/Models/Operations/GetLogsForDeploymentRequest.md
@@ -389,6 +394,8 @@ docs/Models/Shared/CreateRoomParams.md
 docs/Models/Shared/CurrentAllocation.md
 docs/Models/Shared/Room.md
 docs/Models/Shared/RoomAllocation.md
+docs/Models/Shared/CreateRoomResponseStatus.md
+docs/Models/Shared/CreateRoomResponse.md
 docs/Models/Shared/ConnectionInfoV2Status.md
 docs/Models/Shared/ConnectionInfoV2.md
 docs/Models/Shared/UpdateRoomConfigParams.md
@@ -402,11 +409,12 @@ docs/sdks/deploymentv1/README.md
 docs/sdks/discoveryv1/README.md
 docs/sdks/lobbyv1/README.md
 docs/sdks/lobbyv2/README.md
-docs/sdks/lobbyv3/README.md
+docs/sdks/lobbyv3sdk/README.md
 docs/sdks/logv1/README.md
 docs/sdks/managementv1/README.md
 docs/sdks/metricsv1/README.md
 docs/sdks/processesv1/README.md
 docs/sdks/roomv1/README.md
 docs/sdks/roomv2/README.md
+USAGE.md
 .gitattributes

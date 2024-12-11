@@ -59,7 +59,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
         private string _deletedAtWrapper;
         
         /// <summary>Serialized from `DateTime`.</summary>
-        public DateTime DeletedAt
+        public DateTime? DeletedAt
         {
             get => DateTime.Parse(_deletedAtWrapper);
             set => _deletedAtWrapper = value.ToString();
@@ -119,7 +119,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
         }
 
         
-        public ApplicationWithDeploymentSerializable(ApplicationWithDeployment _appWithDeployment)
+        public ApplicationWithDeploymentSerializable(ApplicationWithLatestDeploymentAndBuild _appWithDeployment)
         {
             if (_appWithDeployment == null)
                 return;
@@ -138,9 +138,9 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public ApplicationWithDeployment ToApplicationWithDeploymentType()
+        public ApplicationWithLatestDeploymentAndBuild ToApplicationWithDeploymentType()
         {
-            ApplicationWithDeployment appWithDeploy = new()
+            ApplicationWithLatestDeploymentAndBuild appWithDeploy = new()
             {
                 DeletedBy = DeletedBy,
                 DeletedAt = DeletedAt,

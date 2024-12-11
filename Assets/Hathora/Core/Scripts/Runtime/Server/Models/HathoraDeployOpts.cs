@@ -71,10 +71,10 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models
         #region Last Deployment
         /// <summary>If you deployed something, we set the cached result</summary>
         // [SerializeField] // TODO: Make serializable. For now, this won't persist between Unity sessions.
-        private Deployment _lastDeployment;
+        private DeploymentV3 _lastDeployment;
         
         /// <summary>If you deployed something, we set the cached result</summary>
-        public Deployment LastDeployment
+        public DeploymentV3 LastDeployment
         {
             get => _lastDeployment;
             set => _lastDeployment = value;

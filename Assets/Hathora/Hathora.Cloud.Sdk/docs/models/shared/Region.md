@@ -16,3 +16,4 @@
 | `Tokyo`        | Tokyo          |
 | `Sydney`       | Sydney         |
 | `SaoPaulo`     | Sao_Paulo      |
+| `Dallas`       | Dallas         |

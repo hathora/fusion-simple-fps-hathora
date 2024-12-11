@@ -64,7 +64,7 @@ namespace Hathora.Core.Scripts.Runtime.Server.Models.SerializedWrappers
             if (_roomAllocation == null)
                 return;
             
-            this.UnscheduledAt = _roomAllocation.UnscheduledAt;
+            this.UnscheduledAt = _roomAllocation.UnscheduledAt ?? DateTime.MaxValue;
             this.ScheduledAt = _roomAllocation.ScheduledAt;
             this.ProcessId = _roomAllocation.ProcessId;
             this.RoomAllocationId = _roomAllocation.RoomAllocationId;

@@ -14,7 +14,7 @@ namespace Fusion.Addons.Hathora
 		private static readonly Dictionary<string, Region> _photonToHathora = new Dictionary<string, Region>()
 		{
 			{ "us",   Region.WashingtonDC },
-			{ "usw",  Region.Seattle      },
+			{ "usw",  Region.Dallas      },
 			{ "asia", Region.Singapore    },
 			{ "jp",   Region.Tokyo        },
 			{ "eu",   Region.Frankfurt    },
@@ -27,6 +27,7 @@ namespace Fusion.Addons.Hathora
 		{
 			{ Region.Seattle,      "usw"  },
 			{ Region.LosAngeles,   "usw"  },
+			{ Region.Dallas,   "usw"  },
 			{ Region.WashingtonDC, "us"   },
 			{ Region.Chicago,      "us"   },
 			{ Region.London,       "eu"   },
@@ -51,13 +52,21 @@ namespace Fusion.Addons.Hathora
 		public static async Task<(bool bestRegionFound, Region bestRegion, double bestRegionPing)> FindBestRegion(HathoraCloudSDK hathoraCloudSDK, Region fallbackRegion, bool enableLogs = false)
 		{
 			// 1. Get all Hathora endpoints.
-			GetPingServiceEndpointsResponse pingEndpointsResponse = await hathoraCloudSDK.DiscoveryV1.GetPingServiceEndpointsAsync();
-			if (pingEndpointsResponse.DiscoveryResponse == null)
+			GetPingServiceEndpointsResponse pingEndpointsResponse = await hathoraCloudSDK.DiscoveryV2.GetPingServiceEndpointsAsync();
+			if (pingEndpointsResponse.PingEndpoints == null)
 				return (false, fallbackRegion, default);
+
+			Debug.Log(pingEndpointsResponse.PingEndpoints.Count);
+			foreach (PingEndpoints endpoint in pingEndpointsResponse.PingEndpoints)
+			{
+				Debug.Log(endpoint.Region);
+				Debug.Log(endpoint.Host);
+				Debug.Log(endpoint.Port);
+			}
 
 			// 2. Create ping request.
 			List<Tuple<Region, List<Ping>>> regionPings = new List<Tuple<Region, List<Ping>>>();
-			foreach (DiscoveryResponse endpoint in pingEndpointsResponse.DiscoveryResponse)
+			foreach (PingEndpoints endpoint in pingEndpointsResponse.PingEndpoints)
 			{
 				string ip = TryGetIPAddress(endpoint.Host);
 
@@ -150,6 +159,7 @@ namespace Fusion.Addons.Hathora
 				}
 			}
 
+			bestRegion = Region.Dallas;
 			return (bestRegionFound, bestRegion, bestRegionPing);
 		}
 
